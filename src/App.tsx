@@ -45,6 +45,18 @@ export default function App() {
     setTripName(''); setTripCurrency('USD'); setTripBudget('');
   };
 
+  const handleDeleteTrip = (tripId: string) => {
+    deleteTrip(tripId);
+    
+    const updatedTrips = loadTrips();
+    setTrips(updatedTrips);
+
+    if (activeTrip?.id === tripId) {
+      setActiveTrip(null);
+      setView('trips');
+    }
+  };
+
   const handleAddExpense = async () => {
     if (!activeTrip || !amount) return;
     const amountNum = parseFloat(amount);
@@ -79,7 +91,9 @@ export default function App() {
             New Trip
           </button>
       </div>
-      {trips.length === 0 && <p className='text-gray-500 text-sm'>No trips yet</p>}
+      {trips.length === 0 && (
+        <p className='text-gray-500 text-sm'>No trips yet</p>
+      )}
       {trips.map(trip => {
         const avg = getAverageDailySpend(trip);
         const over = avg > trip.dailyBudgetUSD;
@@ -88,9 +102,20 @@ export default function App() {
             className='border rounded-xl p-4 cursor-pointer hover:bg-gray-50'>
             <div className='flex justify-between'>
               <p className='font-semibold'>{trip.name}</p>
-              <p className={`text-sm font-medium ${over ? 'text-red-600' : 'text-green-700'}`}>
-                ${avg}/day
-              </p>
+              <div className='flex items-center gap-2'>
+                <p className={`text-sm font-medium ${over ? 'text-red-600' : 'text-green-700'}`}>
+                  ${avg}/day
+                </p>
+
+                <button onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteTrip(trip.id);
+                }}
+                className='text-xs text-red-600 hover:underline'
+                >
+                  Delete
+                </button>
+              </div>
             </div>
             <p className='text-xs text-gray-500 mt-1'>
               {getTripDays(trip)} days ; budget ${trip.dailyBudgetUSD}/day ; {trip.expenses.length} expenses
