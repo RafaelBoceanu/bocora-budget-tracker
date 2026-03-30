@@ -127,11 +127,21 @@ select.input {
 
 /* ── Country picker ── */
 .country-search-wrap { position: relative; }
-.country-dropdown {  
+.country-search-wrap {
   position: relative;
-  background: #fff; border: 1.5px solid #e2ddd4; border-radius: 12px;
-  max-height: 220px; overflow-y: auto;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+.country-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1.5px solid #e2ddd4;
+  border-radius: 12px;
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 100;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.14);
 }
 .country-option {
   display: flex; align-items: center; gap: 10px;

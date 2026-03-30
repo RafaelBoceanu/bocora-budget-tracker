@@ -1,5 +1,5 @@
 // src/App.tsx
-import { useMemo, useState, useEffect, useRef  } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { loadTrips, saveTrip, deleteTrip } from './lib/storage'
 import { convertCurrency } from './lib/currency'
 import {
@@ -17,7 +17,7 @@ import './App.css'
 const CATEGORIES = Object.keys(CATEGORY_LABELS) as Category[]
 const ALL_COUNTRIES = Object.keys(COUNTRY_CURRENCIES).sort()
 
-// ─── small helpers ──────────────────────────────────────────────────────────
+// ─── tiny helpers ──────────────────────────────────────────────────────────
 const fmt = (n: number, currency: string) =>
   new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: 2 }).format(n)
 
@@ -82,7 +82,7 @@ function DonutChart({ data, currency }: {
 }
 
 /** SVG cumulative spend line chart */
-function LineChart({ series, budget }: {
+function LineChart({ series, budget, currency }: {
   series: Array<{ date: string; cumulative: number }>,
   budget: number,
   currency: string,
@@ -179,70 +179,36 @@ function CountryPicker({ value, onChange }: {
 }) {
   const [query, setQuery] = useState(value)
   const [open, setOpen] = useState(false)
-  const [dropRect, setDropRect] = useState<{ top: number; left: number; width: number } | null>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
   const wrapRef = useRef<HTMLDivElement>(null)
-
-  const measureAndOpen = () => {
-    if (inputRef.current) {
-      const r = inputRef.current.getBoundingClientRect()
-      setDropRect({ top: r.bottom + 4, left: r.left, width: r.width })
-    }
-    setOpen(true)
-  }
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      const target = e.target as Node
-      const portal = document.getElementById('country-dd-portal')
-      const outsideWrap = wrapRef.current && !wrapRef.current.contains(target)
-      const outsidePortal = !portal || !portal.contains(target)
-      if (outsideWrap && outsidePortal) setOpen(false)
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false)
     }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
   }, [])
 
-  useEffect(() => {
-    if (!open) return
-    const reposition = () => {
-      if (inputRef.current) {
-        const r = inputRef.current.getBoundingClientRect()
-        setDropRect({ top: r.bottom + 4, left: r.left, width: r.width })
-      }
-    }
-    window.addEventListener('scroll', reposition, true)
-    window.addEventListener('resize', reposition)
-    return () => {
-      window.removeEventListener('scroll', reposition, true)
-      window.removeEventListener('resize', reposition)
-    }
-  }, [open])
-
   const filtered = ALL_COUNTRIES.filter(c =>
     c.toLowerCase().includes(query.toLowerCase())
-  )
+  ).slice(0, 40)
 
   return (
-    <div className="country-search-wrap" ref={wrapRef}>
+    <div ref={wrapRef} style={{ position: 'relative', zIndex: 100 }}>
       <input
-        ref={inputRef}
         className="input"
-        placeholder="Search country..."
+        placeholder="Search country…"
         value={query}
-        onChange={e => { 
-          const lettersOnly = e.target.value.replace(/[^a-zA-Z\s]/g, '')
-          setQuery(lettersOnly) 
-          if (!open) measureAndOpen()
+        autoComplete="off"
+        onChange={e => {
+          const lettersOnly = e.target.value.replace(/[^a-zA-Z\s\-']/g, '')
+          setQuery(lettersOnly)
+          setOpen(true)
         }}
-        onFocus={measureAndOpen}
+        onFocus={() => setOpen(true)}
       />
-      {open && filtered.length > 0 && dropRect && (
-        <div 
-          id="country-dd-portal"
-          className="country-dropdown"
-          style={{ position: 'absolute', top: dropRect.top, left: dropRect.left, width: dropRect.width, zIndex: 100 }}
-        >
+      {open && filtered.length > 0 && (
+        <div className="country-dropdown">
           {filtered.map(country => (
             <div key={country} className="country-option"
               onMouseDown={e => {
@@ -252,7 +218,7 @@ function CountryPicker({ value, onChange }: {
                 setQuery(country)
                 setOpen(false)
               }}>
-              <span className="flag">{COUNTRY_FLAGS[country] ?? '\ud83c\udf0d'}</span>
+              <span className="flag">{COUNTRY_FLAGS[country] ?? '🌍'}</span>
               <span>{country}</span>
               <span className="currency-tag">{COUNTRY_CURRENCIES[country]}</span>
             </div>
@@ -262,6 +228,7 @@ function CountryPicker({ value, onChange }: {
     </div>
   )
 }
+
 
 // ─── Main App ──────────────────────────────────────────────────────────────
 export default function App() {
@@ -287,40 +254,6 @@ export default function App() {
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
 
   useEffect(() => { setTrips(loadTrips()) }, [])
-
-  const dailySeries = useMemo(
-  () => activeTrip ? getDailySpendSeries(activeTrip) : [],
-  [activeTrip]
-  )
-
-  const catBreakdown = useMemo(
-  () => activeTrip ? getSpendByCategory(activeTrip) : [],
-  [activeTrip]
-  )
-
-  const countryBreakdown = useMemo(
-  () => activeTrip ? getSpendByCountry(activeTrip) : [],
-  [activeTrip]
-  )
-
-  const pace = useMemo(
-  () => activeTrip
-    ? getBudgetPace(activeTrip)
-    : {
-        daysIn: 0,
-        avgPerDay: 0,
-        budget: 0,
-        surplusPerDay: 0,
-        projectedTotal: 0,
-        onTrack: true,
-      },
-  [activeTrip]
-  ) 
-
-  const rolling = useMemo(
-    () => activeTrip ? getRollingAverage(activeTrip, 7) : [],
-    [activeTrip]
-  )
 
   const refresh = () => {
     const fresh = loadTrips()
@@ -538,8 +471,15 @@ export default function App() {
       return acc
     }, {})
 
+    // Trends data
+    const dailySeries = useMemo(() => getDailySpendSeries(activeTrip), [activeTrip])
+    const catBreakdown = useMemo(() => getSpendByCategory(activeTrip), [activeTrip])
+    const countryBreakdown = useMemo(() => getSpendByCountry(activeTrip), [activeTrip])
+    const pace = useMemo(() => getBudgetPace(activeTrip), [activeTrip])
+    const rolling = useMemo(() => getRollingAverage(activeTrip, 7), [activeTrip])
+
     // Spend acceleration insight
-    const recentAvg = rolling.length >= 3 ? rolling.slice(-3).reduce((s, r) => s + r.avg, 0) / 3 : 0
+    const recentAvg = rolling.slice(-3).reduce((s, r) => s + r.avg, 0) / 3
     const olderAvg = rolling.slice(-7, -3).reduce((s, r) => s + r.avg, 0) / 4
     const acceleration = olderAvg > 0 ? ((recentAvg - olderAvg) / olderAvg) * 100 : 0
     const topCat = catBreakdown[0]
@@ -726,7 +666,7 @@ export default function App() {
                 </div>
 
                 {/* Country breakdown */}
-                 {countryBreakdown.length > 0 && (
+                {countryBreakdown.length > 0 && (
                   <div className="card animate-in">
                     <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>Spend by Country</div>
                     <div style={{ fontSize: 12, color: '#9a9088', marginBottom: 14 }}>
@@ -769,7 +709,7 @@ export default function App() {
                               <td>
                                 {hasData ? (() => {
                                   // compare avgPerDay in USD vs benchmark
-                                  // stored amountUSD so we can recompute country avg in USD
+                                  // we stored amountUSD so we can recompute country avg in USD
                                   const usdExpenses = activeTrip.expenses.filter(e => e.country === d.country)
                                   const totalUSD = usdExpenses.reduce((s, e) => s + e.amountUSD, 0)
                                   const avgUSD = totalUSD / d.days
@@ -798,7 +738,7 @@ export default function App() {
                     </div>
                   </div>
                 )}
- 
+
               </div>
             )
           )}
@@ -836,7 +776,7 @@ export default function App() {
           </div>
 
           {/* Country picker — sets currency automatically */}
-          <div className="animate-in" style={{ animationDelay: '0.04s', marginBottom: 16 }}>
+          <div style={{ marginBottom: 16 }}>
             <div className="section-header" style={{ margin: '0 0 8px' }}>Country & Currency</div>
             <CountryPicker
               value={expenseCountry}
@@ -857,7 +797,7 @@ export default function App() {
           </div>
 
           {/* Category */}
-          <div className="animate-in" style={{ animationDelay: '0.08s', marginBottom: 16, zIndex: 1 }}>
+          <div style={{ marginBottom: 16 }}>
             <div className="section-header" style={{ margin: '0 0 8px' }}>Category</div>
             <div className="cat-grid">
               {CATEGORIES.map(cat => (
