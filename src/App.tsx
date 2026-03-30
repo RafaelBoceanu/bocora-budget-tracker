@@ -241,7 +241,7 @@ function CountryPicker({ value, onChange }: {
         <div 
           id="country-dd-portal"
           className="country-dropdown"
-          style={{ position: 'fixed', top: dropRect.top, left: dropRect.left, width: dropRect.width, zIndex: 9999 }}
+          style={{ position: 'relative', top: dropRect.top, left: dropRect.left, width: dropRect.width, zIndex: 9999 }}
         >
           {filtered.map(country => (
             <div key={country} className="country-option"
