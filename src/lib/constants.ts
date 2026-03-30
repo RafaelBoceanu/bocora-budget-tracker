@@ -169,7 +169,7 @@ export const COUNTRY_FLAGS: Record<string, string> = {
   Israel:        '🇮🇱', Jordan:        '🇯🇴', 'United Arab Emirates': '🇦🇪', Cuba:  '🇨🇺', Cameroon:       '🇨🇲',
   Georgia:       '🇬🇪', Armenia:       '🇦🇲', Angola:        '🇦🇴', 'Dominican Republic': '🇩🇴', Madagascar: '🇲🇬',
   Azerbaijan:    '🇦🇿', Gabon:         '🇬🇦', 'Central African Republic': '🇨🇫', 'Democratic Republic of the Congo': '🇨🇩', 'Republic of the Congo': '🇨🇬',
-  Fiji:          '🇫🇯', Vanuatu:       '🇻🇺', Samoa:         '🇼🇸', 'Papua New Guinea': '🇵🇬', 'Solomon Islands': '🇸🇧',
+  Fiji:          '🇫🇯', Vanuatu:       '🇻🇺', Samoa:         '🇼🇸', 'Papua New Guinea': '🇵🇬', 'Solomon Islands': '🇸🇧', Mozambique: '🇲🇿',
 };
 
 // Crowdsourced average daily budgets in USD (for backpackers)
