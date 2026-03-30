@@ -241,7 +241,7 @@ function CountryPicker({ value, onChange }: {
         <div 
           id="country-dd-portal"
           className="country-dropdown"
-          style={{ position: 'fixed', top: dropRect.top, width: dropRect.width, zIndex: 9999 }}
+          style={{ position: 'fixed', width: dropRect.width, zIndex: 100 }}
         >
           {filtered.map(country => (
             <div key={country} className="country-option"
@@ -769,7 +769,7 @@ export default function App() {
                               <td>
                                 {hasData ? (() => {
                                   // compare avgPerDay in USD vs benchmark
-                                  // we stored amountUSD so we can recompute country avg in USD
+                                  // stored amountUSD so we can recompute country avg in USD
                                   const usdExpenses = activeTrip.expenses.filter(e => e.country === d.country)
                                   const totalUSD = usdExpenses.reduce((s, e) => s + e.amountUSD, 0)
                                   const avgUSD = totalUSD / d.days
