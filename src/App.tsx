@@ -242,7 +242,6 @@ function CountryPicker({ value, onChange }: {
           id="country-dd-portal"
           className="country-dropdown"
           style={{ position: 'fixed', top: dropRect.top, width: dropRect.width, zIndex: 9999 }}
-          // top:  left: dropRect.left, 
         >
           {filtered.map(country => (
             <div key={country} className="country-option"
@@ -858,7 +857,7 @@ export default function App() {
           </div>
 
           {/* Category */}
-          <div className="animate-in" style={{ animationDelay: '0.08s', marginBottom: 16 }}>
+          <div className="animate-in" style={{ animationDelay: '0.08s', marginBottom: 16, zIndex: 1 }}>
             <div className="section-header" style={{ margin: '0 0 8px' }}>Category</div>
             <div className="cat-grid">
               {CATEGORIES.map(cat => (
