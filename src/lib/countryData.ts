@@ -8,7 +8,7 @@ export interface CountryInfo {
     budget: number;
 }
 
-const BUDGET_BY_COUNTRY: Record<string, number> = {
+export const BUDGET_BY_COUNTRY: Record<string, number> = {
   // Southeast Asia
   Thailand: 35, Vietnam: 30, Indonesia: 35, Cambodia: 30, Laos: 25,
   Myanmar: 30, Philippines: 35, Malaysia: 45, Singapore: 90,

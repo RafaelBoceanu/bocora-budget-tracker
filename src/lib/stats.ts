@@ -1,7 +1,7 @@
 // src/lib/stats.ts
 import { differenceInDays, parseISO, format, eachDayOfInterval } from 'date-fns';
 import type { Trip, Category } from './types';
-import { COUNTRY_BUDGETS } from './constants';
+import { BUDGET_BY_COUNTRY } from './countryData';
 
 export function getTripDays(trip: Trip): number {
     const today = new Date()
@@ -105,5 +105,5 @@ export function getBudgetPace(trip: Trip): {
 }
 
 export function getBenchmark(country: string): number | null {
-    return COUNTRY_BUDGETS[country] ?? null;
+    return BUDGET_BY_COUNTRY[country] ?? null;
 }
