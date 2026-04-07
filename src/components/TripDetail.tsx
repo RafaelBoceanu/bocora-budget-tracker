@@ -30,8 +30,9 @@ export function TripDetail({
 
   const today = todayLocal();
   const avg = getAverageDailyHome(trip);
-  const over = avg > trip.dailyBudgetHome;
-  const progress = Math.min((avg / trip.dailyBudgetHome) * 100, 100);
+  const budget = Math.max(trip.dailyBudgetHome, 0.01);
+  const over = avg > budget;
+  const progress = Math.min((avg / budget) * 100, 100);
   const days = getTripDays(trip);
   const total = getTotalHome(trip);
 
@@ -47,10 +48,12 @@ export function TripDetail({
   const topCat = catBreakdown[0];
   const maxCountryTotal = countryBreakdown[0]?.total ?? 1;
 
-  const grouped = [...trip.expenses].reverse().reduce<Record<string, Expense[]>>((acc, e) => {
-    (acc[e.date] ??= []).push(e);
-    return acc;
-  }, {});
+  const grouped = [...trip.expenses]
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .reduce<Record<string, Expense[]>>((acc, e) => {
+      (acc[e.date] ??= []).push(e);
+      return acc;
+    }, {});
 
   return (
     <div className="app-shell">
@@ -93,7 +96,7 @@ export function TripDetail({
                 Avg/day: <strong>{fmt(avg, trip.homeCurrency)}</strong>
               </span>
               <span style={{ fontSize: 12, opacity: 0.65 }}>
-                Budget: <strong>{fmt(trip.dailyBudgetHome, trip.homeCurrency)}</strong>
+                Budget: <strong>{fmt(budget, trip.homeCurrency)}</strong>
               </span>
             </div>
             <div className="progress-track" style={{ background: 'rgba(255,255,255,0.15)' }}>
@@ -102,8 +105,8 @@ export function TripDetail({
           </div>
           <div style={{ fontSize: 13, opacity: 0.7 }}>
             {over
-              ? `⚠️ ${fmt(avg - trip.dailyBudgetHome, trip.homeCurrency)} over budget per day`
-              : `✅ ${fmt(trip.dailyBudgetHome - avg, trip.homeCurrency)} under budget per day`}
+              ? `⚠️ ${fmt(avg - budget, trip.homeCurrency)} over budget per day`
+              : `✅ ${fmt(budget - avg, trip.homeCurrency)} under budget per day`}
           </div>
         </div>
 
@@ -161,26 +164,20 @@ export function TripDetail({
                             )}
                           </div>
                           {e.note && (
-                            <div style={{
-                              fontSize: 12, color: '#9a9088', marginTop: 1,
-                              overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                            }}>
+                            <div style={{ fontSize: 12, color: '#9a9088', marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                               {e.note}
                             </div>
                           )}
                         </div>
-                        <div style={{ textAlign: 'right', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <div>
-                            <div style={{ fontSize: 13, fontWeight: 600, color: '#2d2a26' }}>
-                              {fmt(e.amountHome, trip.homeCurrency)}
-                            </div>
-                            {e.currency !== trip.homeCurrency && (
-                              <div style={{ fontSize: 11, color: '#b0a898' }}>
-                                {e.amount.toFixed(2)} {e.currency}
-                              </div>
-                            )}
+                        <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                          <div style={{ fontSize: 14, fontWeight: 600, color: '#1a1714' }}>
+                            {fmt(e.amountHome, trip.homeCurrency)}
                           </div>
-                          <span style={{ color: '#c4bdb4', fontSize: 14 }}>›</span>
+                          {e.currency !== trip.homeCurrency && (
+                            <div style={{ fontSize: 11, color: '#9a9088' }}>
+                              {e.currency} {e.amount.toFixed(2)}
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -193,47 +190,53 @@ export function TripDetail({
 
         {/* TRENDS TAB */}
         {tab === 'trends' && (
-          trip.expenses.length < 2 ? (
+          trip.expenses.length === 0 ? (
             <div className="empty-state animate-in">
               <div className="empty-icon">📊</div>
-              <div className="empty-title">Not enough data yet</div>
-              <div className="empty-sub">Add a few more expenses to see trends and insights.</div>
+              <div className="empty-title">No data yet</div>
+              <div className="empty-sub">Add some expenses to see trends and insights.</div>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
-              {Math.abs(acceleration) > 10 && (
+              {/* Insight */}
+              {topCat && (
                 <div className="insight-card animate-in">
-                  <span className="insight-icon">{acceleration > 0 ? '📈' : '📉'}</span>
+                  <span className="insight-icon">💡</span>
                   <div className="insight-text">
-                    {acceleration > 0
-                      ? <><strong>Spending up {Math.abs(acceleration).toFixed(0)}%</strong> over the past 3 days vs the week before. Biggest category: <strong>{CATEGORY_LABELS[topCat?.category]}</strong>.</>
-                      : <><strong>Spending down {Math.abs(acceleration).toFixed(0)}%</strong> over the past 3 days — nice work!</>}
+                    <strong>{CATEGORY_LABELS[topCat.category]}</strong> is your biggest spend at{' '}
+                    <strong>{topCat.pct}%</strong> of your total.
+                    {Math.abs(acceleration) > 10 && (
+                      <> Your spending is {acceleration > 0 ? 'accelerating 📈' : 'slowing down 📉'} vs last week.</>
+                    )}
                   </div>
                 </div>
               )}
 
+              {/* Spend by Category */}
               <div className="card animate-in">
-                <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 12 }}>Cumulative Spend</div>
-                <LineChart series={dailySeries} budget={trip.dailyBudgetHome} />
-                <div style={{ fontSize: 11, color: '#b0a898', marginTop: 8 }}>
-                  Dashed line = budget pace · Blue line = actual spend
-                </div>
+                <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 14 }}>Spend by Category</div>
+                <DonutChart data={catBreakdown} currency={trip.homeCurrency} />
+                <CategoryBreakdown data={catBreakdown} currency={trip.homeCurrency} />
               </div>
 
+              {/* Daily spend bar chart */}
               <div className="card animate-in">
                 <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>Daily Spend</div>
-                <div style={{ fontSize: 12, color: '#9a9088', marginBottom: 12 }}>
-                  Last {Math.min(dailySeries.length, 30)} days · green = on budget, red = over
+                <div style={{ fontSize: 12, color: '#9a9088', marginBottom: 14 }}>
+                  Last 30 days vs your {fmt(budget, trip.homeCurrency)} budget
                 </div>
-                <DailyBarChart series={dailySeries} budget={trip.dailyBudgetHome} currency={trip.homeCurrency} />
+                <DailyBarChart series={dailySeries} budget={budget} currency={trip.homeCurrency} />
               </div>
 
-              {catBreakdown.length > 0 && (
+              {/* Cumulative spend */}
+              {dailySeries.length >= 2 && (
                 <div className="card animate-in">
-                  <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 14 }}>Spend by Category</div>
-                  <DonutChart data={catBreakdown} currency={trip.homeCurrency} />
-                  <CategoryBreakdown data={catBreakdown} currency={trip.homeCurrency} />
+                  <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>Cumulative Spend</div>
+                  <div style={{ fontSize: 12, color: '#9a9088', marginBottom: 14 }}>
+                    Total over time vs budget pace (dashed)
+                  </div>
+                  <LineChart series={dailySeries} budget={budget} />
                 </div>
               )}
 
@@ -352,7 +355,7 @@ export function TripDetail({
                                 </div>
                               </div>
                             </td>
-                            <td style={{ fontWeight: 600, color: d.avgPerDay > trip.dailyBudgetHome ? '#c0392b' : '#1a7a4a' }}>
+                            <td style={{ fontWeight: 600, color: d.avgPerDay > budget ? '#c0392b' : '#1a7a4a' }}>
                               {fmt(d.avgPerDay, trip.homeCurrency)}
                             </td>
                             <td style={{ color: '#6b6460', fontSize: 12 }}>
@@ -363,7 +366,7 @@ export function TripDetail({
                                 const usdTotal = trip.expenses
                                   .filter(e => e.country === d.country)
                                   .reduce((s, e) => s + e.amountUSD, 0);
-                                const avgUSD = usdTotal / d.days;
+                                const avgUSD = usdTotal / Math.max(1, d.days);
                                 const diff = avgUSD - benchmark!;
                                 const pctDiff = Math.round((diff / benchmark!) * 100);
                                 const isOver = diff > 0;

@@ -91,7 +91,7 @@ export function getBudgetPace(trip: Trip): {
 } {
   const daysIn = getTripDays(trip);
   const avgPerDay = getAverageDailyHome(trip);
-  const budget = trip.dailyBudgetHome;
+  const budget = Math.max(trip.dailyBudgetHome, 0.01);
   const surplusPerDay = parseFloat((budget - avgPerDay).toFixed(2));
   return {
     daysIn,
