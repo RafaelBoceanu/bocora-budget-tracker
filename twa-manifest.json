@@ -1,0 +1,51 @@
+{
+  "packageId": "app.vercel.backpacker_budget_tracker.twa",
+  "host": "backpacker-budget-tracker.vercel.app",
+  "name": "Bocora – Travel Budget Tracker",
+  "launcherName": "Bocora",
+  "display": "standalone",
+  "themeColor": "#2D2A26",
+  "themeColorDark": "#000000",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#FAF8F4",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://backpacker-budget-tracker.vercel.app/icons/icon-512.png",
+  "maskableIconUrl": "https://backpacker-budget-tracker.vercel.app/icons/icon-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "D:\\MVP Projects\\backpacker-budget\\android.keystore",
+    "alias": "android"
+  },
+  "appVersionName": "1",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://backpacker-budget-tracker.vercel.app/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {
+    "playBilling": {
+      "enabled": true
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://backpacker-budget-tracker.vercel.app/",
+  "minSdkVersion": 21,
+  "orientation": "portrait-primary",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "protocolHandlers": [],
+  "fileHandlers": [],
+  "launchHandlerClientMode": "",
+  "displayOverride": [],
+  "appVersion": "1"
+}
