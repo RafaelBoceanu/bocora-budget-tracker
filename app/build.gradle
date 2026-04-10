@@ -21,8 +21,8 @@ plugins {
 }
 
 def twaManifest = [
-    applicationId: 'app.vercel.backpacker_budget_tracker.twa',
-    hostName: 'backpacker-budget-tracker.vercel.app', // The domain being opened in the TWA.
+    applicationId: 'app.bocora.twa',
+    hostName: 'bocora.vercel.app', // The domain being opened in the TWA.
     launchUrl: '/', // The start path for the TWA. Must be relative to the domain.
     name: 'Bocora – Travel Budget Tracker', // The application name.
     launcherName: 'Bocora', // The name shown on the Android Launcher.
@@ -52,13 +52,13 @@ def twaManifest = [
 
 android {
     compileSdkVersion 36
-    namespace "app.vercel.backpacker_budget_tracker.twa"
+    namespace "app.bocora.twa"
     defaultConfig {
-        applicationId "app.vercel.backpacker_budget_tracker.twa"
+        applicationId "app.bocora.twa"
         minSdkVersion 21
         targetSdkVersion 35
-        versionCode 1
-        versionName "1"
+        versionCode 2
+        versionName "2"
 
         // The name for the application
         resValue "string", "appName", twaManifest.name
@@ -76,12 +76,12 @@ android {
             // The URL the Web Manifest for the Progressive Web App that the TWA points to. This
             // is used by Chrome OS and Meta Quest to open the Web version of the PWA instead of
             // the TWA, as it will probably give a better user experience for non-mobile devices.
-            resValue "string", "webManifestUrl", 'https://backpacker-budget-tracker.vercel.app/manifest.webmanifest'
+            resValue "string", "webManifestUrl", 'https://bocora.vercel.app/manifest.webmanifest'
         
 
         
             // This is used by Meta Quest.
-            resValue "string", "fullScopeUrl", 'https://backpacker-budget-tracker.vercel.app/'
+            resValue "string", "fullScopeUrl", 'https://bocora.vercel.app/'
         
 
         

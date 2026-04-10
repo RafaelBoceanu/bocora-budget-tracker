@@ -1,4 +1,4 @@
-package app.vercel.backpacker_budget_tracker.twa;
+package app.bocora.twa;
 
 
 import com.google.androidbrowserhelper.playbilling.digitalgoods.DigitalGoodsRequestHandler;
