@@ -2,7 +2,7 @@
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target": {
     "namespace": "android_app",
-    "package_name": "app.vercel.backpacker_budget_tracker.twa",
+    "package_name": "app.bocora.twa",
     "sha256_cert_fingerprints": ["BA:27:12:B1:13:9A:32:6B:DA:8C:74:1D:CF:7E:88:FB:91:AD:FB:6C:CE:80:FB:B1:DC:96:36:70:B5:65:0B:B1"]
   }
 }]
