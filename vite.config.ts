@@ -16,6 +16,11 @@ export default defineConfig({
         background_color: '#ffffff',
         display: 'standalone',
       },
+      workbox: {
+        navigateFallbackDenylist: [
+          /^\/\.well-known\//,
+        ],
+      },
     }),
   ],
 });
