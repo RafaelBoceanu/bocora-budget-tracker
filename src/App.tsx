@@ -9,6 +9,7 @@ import { TripsView }   from './components/TripsView';
 import { NewTripView } from './components/NewTripView';
 import { TripDetail }  from './components/TripDetail';
 import { ExpenseForm } from './components/ExpenseForm';
+import AdBanner from './components/AdBanner';
 
 import './App.css';
 
@@ -47,12 +48,18 @@ export default function App() {
       )}
 
       {view === 'trips' && (
-        <TripsView
-          trips={trips}
-          onSelectTrip={trip => goToDetail(trip)}
-          onNewTrip={() => setView('new-trip')}
-          onRefresh={refresh}
-        />
+        <>
+          <TripsView
+            trips={trips}
+            onSelectTrip={trip => goToDetail(trip)}
+            onNewTrip={() => setView('new-trip')}
+            onRefresh={refresh}
+          />
+          <AdBanner
+              adSlot="7035461067"
+              style={{ display: 'block', margin: '0' }}
+          />
+        </>
       )}
 
       {view === 'new-trip' && (
