@@ -1,42 +1,12 @@
 {
-  "headers": [
-    {
-      "source": "/sw.js",
-      "headers": [
-        { "key": "Service-Worker-Allowed", "value": "/" }
-      ]
-    }
-  ],
   "rewrites": [
     {
       "source": "/.well-known/assetlinks.json",
       "destination": "/.well-known/assetlinks.json"
     },
     {
-      "source": "/app",
+      "source": "/(.*)",
       "destination": "/index.html"
-    },
-    {
-      "source": "/app/(.*)",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/assets/(.*)",
-      "destination": "/assets/$1"
-    },
-    {
-      "source": "/about",
-      "destination": "/landing.html"
-    },
-    {
-      "source": "/about/",
-      "destination": "/landing.html"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/",
-      "dest": "/landing.html"
     }
   ]
 }
