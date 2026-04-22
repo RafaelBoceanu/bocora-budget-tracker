@@ -13,15 +13,17 @@ export default function AdBanner ({
     fullWidthResponsive = true,
     style = { display: 'block' },
 }: AdBannerProps) {
-    const adRef = useRef<HTMLModElement>(null);
+    const adRef = useRef<HTMLModElement | null>(null);
     const initialized = useRef(false);
 
     useEffect(() => {
+        if (typeof window === 'undefined') return;
         if (initialized.current) return;
         initialized.current = true;
 
         try {
-            ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+            (window as any).adsbygoogle = (window as any).adsbygoogle || [];
+            (window as any).adsbygoogle.push({});
         } catch (e) {
             console.error('AdSense error:', e);
         }
