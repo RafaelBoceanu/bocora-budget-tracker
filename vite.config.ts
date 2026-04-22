@@ -19,10 +19,7 @@ export default defineConfig({
         navigateFallbackDenylist: [
           /^\/\.well-known\//,
           /^\/$/,
-          /^\/about/,
         ],
-        skipWaiting: true,
-        clientsClaim: true,
       },
     }),
   ],

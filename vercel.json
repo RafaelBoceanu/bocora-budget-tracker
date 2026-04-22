@@ -17,12 +17,18 @@
       "destination": "/assets/$1"
     },
     {
-      "source": "/",
-      "destination": "/index-landing.html"
+      "source": "/about",
+      "destination": "/landing.html"
     },
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/about/",
+      "destination": "/landing.html"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/landing.html"
     }
   ]
 }
