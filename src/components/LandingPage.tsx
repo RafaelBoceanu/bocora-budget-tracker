@@ -223,7 +223,7 @@ export default function LandingPage() {
       <div className="lp-body">
         {/* NAV */}
         <nav className="lp-nav">
-          <a href="/" className="lp-logo">Bocora</a>
+          <a href="/" className="lp-logo">✈️ Bocora</a>
           <div className="lp-nav-actions">
             <a href={playStore} target="_blank" rel="noreferrer" className="lp-btn lp-btn-ghost">Android App</a>
             <a href={openUrl} className="lp-btn lp-btn-primary">Open App</a>
@@ -232,7 +232,6 @@ export default function LandingPage() {
 
         {/* HERO */}
         <div className="lp-hero">
-          <div className="lp-eyebrow">✈ Travel Budget Tracker</div>
           <h1 className="lp-h1">Track every trip,<br /><em>every currency</em></h1>
           <p className="lp-sub">
             Bocora keeps your travel budget under control — log expenses in any currency,
@@ -311,7 +310,7 @@ export default function LandingPage() {
           <h2 className="lp-section-title">Common questions</h2>
           <div className="lp-faq">
             {[
-              { q: 'Is Bocora free?', a: 'Yes, completely free. No subscriptions, no premium tiers, no paywalled features — ever.' },
+              { q: 'Is Bocora free?', a: 'Yes, completely free. No subscriptions, no premium tiers, no paywalled features.' },
               { q: 'Do I need to create an account?', a: 'No account needed. Bocora stores everything locally on your device. Nothing is sent to external servers.' },
               { q: 'Which currencies are supported?', a: 'Over 150 currencies with live conversion rates. When offline, Bocora uses the most recently cached rates.' },
               { q: 'Does it work on iPhone?', a: 'Yes. The web app works on any device including iPhone. Open it in Safari and add it to your home screen for a native feel.' },
