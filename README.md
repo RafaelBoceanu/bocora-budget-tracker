@@ -1,4 +1,4 @@
-# Backpacker Budget Tracker
+# Bocora
 
 Mobile-first PWA for tracking travel expenses on the road.
 Log expenses by category, compare your daily spend against
@@ -8,7 +8,7 @@ backpacker costs in 30 countries.
 **Live demo:** https:/bocora.vercel.app/
 
 ## Features
-- Track expenses across 7 categories
+- Track expenses across multiple categories
 - Live currency conversion via free Exchange Rate API
 - Compare against crowdsourced daily budgets for 30 countries
 - Works offline — installable as a PWA on mobile
