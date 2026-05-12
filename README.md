@@ -5,7 +5,7 @@ Log expenses by category, compare your daily spend against
 your budget, and see how you stack up against typical
 backpacker costs in 30 countries.
 
-**Live demo:** https://backpacker-budget-tracker.vercel.app/
+**Live demo:** https:/bocora.vercel.app/
 
 ## Features
 - Track expenses across 7 categories
