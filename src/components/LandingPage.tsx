@@ -225,7 +225,6 @@ export default function LandingPage() {
         <nav className="lp-nav">
           <a href="/" className="lp-logo">✈️ Bocora</a>
           <div className="lp-nav-actions">
-            <a href={playStore} target="_blank" rel="noreferrer" className="lp-btn lp-btn-ghost">Android App</a>
             <a href={openUrl} className="lp-btn lp-btn-primary">Open App</a>
           </div>
         </nav>
@@ -239,7 +238,6 @@ export default function LandingPage() {
           </p>
           <div className="lp-actions">
             <a href={openUrl} className="lp-btn lp-btn-primary lp-btn-lg lp-btn-full">Start Tracking Free</a>
-            <a href={playStore} target="_blank" rel="noreferrer" className="lp-btn lp-btn-ghost lp-btn-lg lp-btn-full">Get Android App</a>
           </div>
         </div>
 
